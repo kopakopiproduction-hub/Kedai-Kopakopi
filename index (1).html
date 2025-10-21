@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Waroeng KopaKopi - Menu & Pesan WhatsApp</title>
+  <style>
+    :root{--bg:#fff;--muted:#6b7280;--accent:#7c3aed;--card:#f8fafc}
+    *{box-sizing:border-box}
+    body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:linear-gradient(180deg,#fff 0%, #f7f7fb 100%); margin:0; color:#0f172a}
+    .container{max-width:950px;margin:28px auto;padding:20px}
+    header{display:flex;gap:16px;align-items:center}
+    .logo{width:76px;height:76px;border-radius:12px;background:#111827;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+    h1{font-size:20px;margin:0}
+    p.lead{margin:4px 0 12px;color:var(--muted)}
+
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
+    @media(max-width:880px){.grid{grid-template-columns:1fr;}.sidebar{order:2}}
+
+    .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(15,23,42,0.04)}
+    .menu-list{display:grid;gap:10px}
+    .item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:white}
+    .item .meta{display:flex;flex-direction:column}
+    .item .name{font-weight:600}
+    .price{color:var(--muted);font-weight:700}
+    button.btn{background:var(--accent);color:white;border:0;padding:8px 12px;border-radius:8px;cursor:pointer}
+    button.btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(124,58,237,0.14)}
+
+    .sidebar h3{margin-top:0}
+    label{display:block;font-size:13px;margin-top:10px;color:var(--muted)}
+    input[type="text"],select,textarea,input[type="number"]{width:100%;padding:8px;border-radius:8px;border:1px solid #e6e9ef;margin-top:6px}
+    .order-preview{margin-top:12px;background:#fff;padding:10px;border-radius:8px}
+
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">Kopa</div>
+      <div>
+        <h1>Waroeng KopaKopi</h1>
+        <p class="lead">Ngopi Dulu, Yang Lain Nyusul — Cilegon • Klik tombol "Pesan" untuk kirim via WhatsApp</p>
+      </div>
+    </header>
+
+    <div class="grid">
+      <main>
+        <div class="card">
+          <h2 style="margin-top:0">Menu & Harga</h2>
+          <div class="menu-list" id="menuList">
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="card">
+          <h2 style="margin-top:0">Daftar Snack</h2>
+          <div class="menu-list" id="snackList"></div>
+        </div>
+      </main>
+
+      <aside class="sidebar">
+        <div class="card">
+          <h3>Form Pesanan Cepat</h3>
+          <label>Nama</label>
+          <input type="text" id="custName" placeholder="Nama kamu" />
+
+          <label>Pesanan (cth: KopaKopi Aren x2, Cappuccino x1)</label>
+          <textarea id="custOrder" rows="3" placeholder="Tulis pesanan..."></textarea>
+
+          <label>Catatan / Alamat (opsional)</label>
+          <input type="text" id="custNote" placeholder="Mis. Ambil di tempat / alamat..." />
+
+          <label>Jumlah / Total Estimasi (opsional)</label>
+          <input type="text" id="custQty" placeholder="cth: 3 item / total Rp..." />
+
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="btn" id="sendOrderBtn">Kirim Pesanan via WhatsApp</button>
+            <button class="btn ghost" id="resetBtn">Reset</button>
+          </div>
+
+          <div class="order-preview" id="preview">
+            <strong>Preview pesan:</strong>
+            <div id="previewText" style="margin-top:6px;color:var(--muted);white-space:pre-wrap"></div>
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="card">
+          <strong>Kontak</strong>
+          <p style="margin:6px 0 0">WhatsApp: <a href="#" id="waLink">0812-9265-3154</a></p>
+          <p style="margin:6px 0 0;color:var(--muted);font-size:13px">Klik tombol pada menu untuk langsung memesan item tertentu.</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      © Waroeng KopaKopi — Ngopi Dulu, Yang Lain Nyusul • Cilegon
+    </footer>
+  </div>
+
+  <script>
+    const WA_NUMBER = '6281292653154';
+    const menu = [
+      {name: 'KopaKopi Aren', price: 10000},
+      {name: 'KopaKopi Susu', price: 10000},
+      {name: 'KopaKopi Creamy Latte', price: 10000},
+      {name: 'KopaKopi Mocha Blend', price: 10000},
+      {name: 'V60 Arabica (Premium)', price: 13000},
+      {name: 'Japanese Iced Coffee', price: 13000},
+      {name: 'Cold Brew Original', price: 13000},
+      {name: 'Espresso (Single Shot)', price: 5000},
+      {name: 'Espresso (Double Shot)', price: 7000},
+      {name: 'Americano (Single)', price: 5000},
+      {name: 'Americano (Double)', price: 7000},
+      {name: 'Cappuccino', price: 7000},
+      {name: 'Latte Milk', price: 7000}
+    ];
+    const snacks = [
+      {name: 'Roti Bakar Coklat Keju', price: 10000},
+      {name: 'Pisang Goreng Crispy', price: 8000},
+      {name: 'Singkong Thailand', price: 9000}
+    ];
+    function formatRupiah(n){return 'Rp' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');}
+    function createMenuList(){
+      const container=document.getElementById('menuList');
+      menu.forEach((it,idx)=>{
+        const div=document.createElement('div');
+        div.className='item';
+        div.innerHTML=`<div class="meta"><div class="name">${it.name}</div><div style="font-size:13px;color:var(--muted)">Harga: ${formatRupiah(it.price)}</div></div><button class="btn" onclick="orderItem(${idx})">Pesan</button>`;
+        container.appendChild(div);
+      });
+      const snackContainer=document.getElementById('snackList');
+      snacks.forEach((it,idx)=>{
+        const div=document.createElement('div');
+        div.className='item';
+        div.innerHTML=`<div class="meta"><div class="name">${it.name}</div><div style="font-size:13px;color:var(--muted)">Harga: ${formatRupiah(it.price)}</div></div><button class="btn" onclick="orderSnack(${idx})">Pesan</button>`;
+        snackContainer.appendChild(div);
+      });
+    }
+    function buildWhatsAppUrl(message){const encoded=encodeURIComponent(message);return `https://wa.me/${WA_NUMBER}?text=${encoded}`;}
+    function orderItem(idx){const it=menu[idx];const qty=prompt(`Berapa jumlah ${it.name}?`,'1');if(qty===null)return;const name=document.getElementById('custName').value||'---';const note=document.getElementById('custNote').value||'-';const message=`Pesanan dari *Waroeng KopaKopi*%0ANama: ${name}%0AItem: ${it.name} x${qty}%0AHarga satuan: ${formatRupiah(it.price)}%0ATotal (estimasi): ${formatRupiah(it.price*parseInt(qty||1))}%0ACatatan: ${note}%0A%0ATerima kasih!`;window.open(buildWhatsAppUrl(message),'_blank');}
+    function orderSnack(idx){const it=snacks[idx];const qty=prompt(`Berapa jumlah ${it.name}?`,'1');if(qty===null)return;const name=document.getElementById('custName').value||'---';const note=document.getElementById('custNote').value||'-';const message=`Pesanan dari *Waroeng KopaKopi*%0ANama: ${name}%0AItem: ${it.name} x${qty}%0AHarga satuan: ${formatRupiah(it.price)}%0ATotal (estimasi): ${formatRupiah(it.price*parseInt(qty||1))}%0ACatatan: ${note}%0A%0ATerima kasih!`;window.open(buildWhatsAppUrl(message),'_blank');}
+    document.addEventListener('DOMContentLoaded',()=>{createMenuList();const btn=document.getElementById('sendOrderBtn');const reset=document.getElementById('resetBtn');const previewText=document.getElementById('previewText');const waLink=document.getElementById('waLink');waLink.href=`https://wa.me/${WA_NUMBER}`;function updatePreview(){const name=document.getElementById('custName').value||'---';const order=document.getElementById('custOrder').value||'-';const note=document.getElementById('custNote').value||'-';const qty=document.getElementById('custQty').value||'-';const txt=`Nama: ${name}\nPesanan: ${order}\nEstimasi jumlah/total: ${qty}\nCatatan: ${note}`;previewText.textContent=txt;}['custName','custOrder','custNote','custQty'].forEach(id=>{document.getElementById(id).addEventListener('input',updatePreview);});btn.addEventListener('click',()=>{const name=document.getElementById('custName').value||'---';const order=document.getElementById('custOrder').value||'-';const note=document.getElementById('custNote').value||'-';const qty=document.getElementById('custQty').value||'-';const message=`Pesanan dari *Waroeng KopaKopi*%0ANama: ${name}%0APesanan: ${order}%0AEstimasi: ${qty}%0ACatatan: ${note}%0A%0ATerima kasih!`;window.open(buildWhatsAppUrl(message),'_blank');});reset.addEventListener('click',()=>{document.getElementById('custName').value='';document.getElementById('custOrder').value='';document.getElementById('custNote').value='';document.getElementById('custQty').value='';updatePreview();});updatePreview();});
+  </script>
+</body>
+</html>
